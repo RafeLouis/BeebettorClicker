@@ -15,12 +15,12 @@ def main() -> None:
 
     try:
         if not config.SIGNIN_PAGE:
-            raise URLNotPassedError
+            raise URLNotPassedError("Sign in page url hasn't provided")
         load_page(driver, config.SIGNIN_PAGE)
         sign_in(driver)
 
         if not config.WORKING_PAGE:
-            raise URLNotPassedError
+            raise URLNotPassedError("Working page url hasn't provided")
         load_page(driver, config.WORKING_PAGE)
         save_plays(driver)
 
