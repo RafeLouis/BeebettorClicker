@@ -27,7 +27,7 @@ def save_plays(driver):
 
         parent_element = option_element.find_element(By.XPATH, "./parent::div/parent::div")
         save_element = parent_element.find_element(By.CSS_SELECTOR, config.SAVE_BUTTON_SELECTOR)
-        click_element(driver, save_element)
+        click_element(driver, save_element, config.CLICK_DELAY)
 
 
 def sign_in(driver):
