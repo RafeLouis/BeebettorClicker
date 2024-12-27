@@ -34,7 +34,7 @@ jobs:
 
       - name: Run Python Selenium script
         env:
-          SIGNIN_PAGE: ${{ vars.SIGNIN_PAGE }}
+          SIGNIN_PAGE: ${{ secrets.SIGNIN_PAGE }}
           WORKING_PAGE: ${{ secrets.WORKING_PAGE }}
           OPTIONS_BUTTON_SELECTOR: ${{ secrets.OPTIONS_BUTTON_SELECTOR }}
           SAVE_BUTTON_SELECTOR: ${{ secrets.SAVE_BUTTON_SELECTOR }}

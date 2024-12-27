@@ -26,10 +26,9 @@ def main() -> None:
 
     except Exception as e:
         logger.error("An error occurred: %s", e)
-    finally:
-        if driver:
-            driver.quit()
-            logger.info("Browser closed successfully")
+
+    driver.quit()
+    logger.info("Browser closed")
 
 
 if __name__ == "__main__":
