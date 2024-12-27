@@ -2,26 +2,29 @@ import logging
 import time
 
 from selenium import webdriver
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
 import config
-from exceptions import SignInError
+from exceptions import SignInError, NoSignInCredentialsError, NoSignInFieldsError
+
 
 logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
 
-def click_element(driver, element, delay=1.0):
+def click_element(driver: WebDriver, element: WebElement, delay: float = 1.0) -> None:
     ActionChains(driver).move_to_element(element).click().perform()
     time.sleep(delay)
     logger.debug("Element %s was clicked", element)
 
 
-def save_plays(driver):
+def save_plays(driver: WebDriver) -> None:
     counter = 0
     elements = driver.find_elements(By.CSS_SELECTOR, config.OPTIONS_BUTTON_SELECTOR)
 
@@ -38,11 +41,17 @@ def save_plays(driver):
     logger.info("%s plays saved", counter)
 
 
-def sign_in(driver):
+def sign_in(driver: WebDriver) -> None:
     url_before_signin = driver.current_url
+
+    if not (config.LOGIN_FIELD_SELECTOR and config.PASSWORD_FIELD_SELECTOR):
+        raise NoSignInFieldsError
 
     login_field = driver.find_element(By.ID, config.LOGIN_FIELD_SELECTOR)
     password_field = driver.find_element(By.ID, config.PASSWORD_FIELD_SELECTOR)
+
+    if not (config.LOGIN and config.PASSWORD):
+        raise NoSignInCredentialsError
 
     login_field.send_keys(config.LOGIN)
     password_field.send_keys(config.PASSWORD)
@@ -56,27 +65,13 @@ def sign_in(driver):
     time.sleep(1)
 
 
-def load_page(driver, page):
+def load_page(driver: WebDriver, page: str) -> None:
     driver.get(page)
     driver.implicitly_wait(10)
     logger.info("Page '%s' loaded", driver.current_url)
 
 
-def get_webdriver():
+def get_chrome_webdriver() -> WebDriver:
     chrome_options = ChromeOptions()
     chrome_options.add_argument("--headless")
-    # chrome_options.add_argument("--no-sandbox")
-    # chrome_options.add_argument("--disable-dev-shm-usage")
-    # chrome_options.add_argument("--disable-gpu")
-    # chrome_options.add_argument("--disable-dev-tools")
-    # chrome_options.add_argument("--no-zygote")
-    # chrome_options.add_argument("--single-process")
-    # chrome_options.add_argument(f"--user-data-dir={mkdtemp()}")
-    # chrome_options.add_argument(f"--data-path={mkdtemp()}")
-    # chrome_options.add_argument(f"--disk-cache-dir={mkdtemp()}")
-    # chrome_options.add_argument("--remote-debugging-pipe")
-    # chrome_options.add_argument("--verbose")
-
-    driver = webdriver.Chrome(options=chrome_options)
-
-    return driver
+    return webdriver.Chrome(options=chrome_options)
