@@ -4,7 +4,6 @@ import time
 from tempfile import mkdtemp
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -65,14 +64,6 @@ def get_webdriver():
     chrome_options.add_argument("--log-path=/tmp")
     chrome_options.binary_location = "/opt/chrome/chrome-linux64/chrome"
 
-    service = ChromeService(
-        executable_path="/opt/chrome-driver/chromedriver-linux64/chromedriver",
-        service_log_path="/tmp/chromedriver.log"
-    )
-
-    driver = webdriver.Chrome(
-        service=service,
-        options=chrome_options
-    )
+    driver = webdriver.Chrome(options=chrome_options)
 
     return driver
