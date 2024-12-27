@@ -1,4 +1,6 @@
 import logging
+import os
+import sys
 
 import config
 from exceptions import URLNotPassedError
@@ -15,20 +17,21 @@ def main() -> None:
 
     try:
         if not config.SIGNIN_PAGE:
-            raise URLNotPassedError("Sign in page url hasn't provided")
+            raise URLNotPassedError("Sign in page url not provided")
         load_page(driver, config.SIGNIN_PAGE)
         sign_in(driver)
 
         if not config.WORKING_PAGE:
-            raise URLNotPassedError("Working page url hasn't provided")
+            raise URLNotPassedError("Working page url not provided")
         load_page(driver, config.WORKING_PAGE)
         save_plays(driver)
-
     except Exception as e:
         logger.error("An error occurred: %s", e)
-
-    driver.quit()
-    logger.info("Browser closed")
+        sys.exit(1)
+    else:
+        logger.info("App completed successfully")
+    finally:
+        driver.quit()
 
 
 if __name__ == "__main__":
