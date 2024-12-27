@@ -30,7 +30,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Set up Chrome and Chromedriver
-        uses: GoogleChrome/setup-chrome@v3
+        uses: nanasess/setup-chromedriver@v2
 
       - name: Run Python Selenium script
         env:
