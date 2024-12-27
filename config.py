@@ -13,3 +13,9 @@ LOGIN = os.getenv("LOGIN")
 PASSWORD = os.getenv("PASSWORD")
 
 CLICK_DELAY = float(os.getenv("CLICK_DELAY"))
+
+SIGNIN_PAGE="https://beebettor.com/users/sign_in"
+WORKING_PAGE="https://beebettor.com/ev"
+
+OPTIONS_BUTTON_SELECTOR='[data-action="click->evresult#toggleOptions"]'
+SAVE_BUTTON_SELECTOR='[data-action="click->evresult#savePlay"]'
