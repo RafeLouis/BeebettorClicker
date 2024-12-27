@@ -12,7 +12,7 @@ import os
 LOGIN = os.getenv("LOGIN")
 PASSWORD = os.getenv("PASSWORD")
 
-CLICK_DELAY = float(os.getenv("CLICK_DELAY"))
+CLICK_DELAY = float(os.getenv("CLICK_DELAY", 1.0))
 
 SIGNIN_PAGE = "https://beebettor.com/users/sign_in"
 WORKING_PAGE = "https://beebettor.com/ev"
