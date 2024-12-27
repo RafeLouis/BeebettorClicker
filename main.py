@@ -12,6 +12,7 @@ def main():
     logger.info("App started successfully")
     driver = get_webdriver()
     try:
+        logger.info(config.SIGNIN_PAGE)
         load_page(driver, config.SIGNIN_PAGE)
         sign_in(driver)
         load_page(driver, config.WORKING_PAGE)
