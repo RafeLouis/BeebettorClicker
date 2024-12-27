@@ -2,14 +2,9 @@ name: Run Selenium Script Every 15 Minutes
 
 on:
   schedule:
-    - cron: '0 0 0 0 0'  # Will never be running automatically
+    - cron: '*/15 * * * *'  # Runs every 15 minutes
   workflow_dispatch:
     inputs:
-      frequency:
-        description: 'How often to run the script (in minutes)'
-        required: true
-        default: '15'  # 15 minutes by default
-        type: string
       send_tg_message:
         description: 'Enable sending Telegram notifications (yes/no)'
         required: false
