@@ -41,6 +41,17 @@ jobs:
           sudo mv chromedriver /usr/local/bin/
 
       - name: Run Python Selenium script
+        env:
+          SIGNIN_PAGE: '$SIGNIN_PAGE'
+          WORKING_PAGE: '$WORKING_PAGE'
+          OPTIONS_BUTTON_SELECTOR: '$OPTIONS_BUTTON_SELECTOR'
+          SAVE_BUTTON_SELECTOR: '$SAVE_BUTTON_SELECTOR'
+          LOGIN_FIELD_SELECTOR: '$LOGIN_FIELD_SELECTOR'
+          PASSWORD_FIELD_SELECTOR: '$PASSWORD_FIELD_SELECTOR'
+          LOGIN: ${{ secrets.LOGIN }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          CLICK_DELAY: '$CLICK_DELAY'
+          CLICK_FREQUENCY_IN_MIN: '$CLICK_FREQUENCY_IN_MIN'
         run: |
           python main.py
 
