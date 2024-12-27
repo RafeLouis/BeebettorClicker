@@ -41,6 +41,7 @@ jobs:
           LOGIN_FIELD_SELECTOR: ${{ vars.LOGIN_FIELD_SELECTOR }}
           PASSWORD_FIELD_SELECTOR: ${{ vars.PASSWORD_FIELD_SELECTOR }}
           CLICK_DELAY: ${{ vars.CLICK_DELAY }}
+
           LOGIN: ${{ secrets.LOGIN }}
           PASSWORD: ${{ secrets.PASSWORD }}
         run: |
