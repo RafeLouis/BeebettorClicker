@@ -30,10 +30,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Set up Chrome and Chromedriver
-        uses: browser-actions/setup-chromedriver@v1
-        with:
-          chromedriver-version: '114.0.5735.90'
-          chrome-version: 'stable'
+        uses: GoogleChrome/setup-chrome@v3
 
       - name: Run Python Selenium script
         env:
