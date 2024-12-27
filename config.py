@@ -1,9 +1,5 @@
 import os
 
-from dotenv import find_dotenv, load_dotenv
-
-load_dotenv(find_dotenv())
-
 SIGNIN_PAGE = os.getenv("SIGNIN_PAGE")
 WORKING_PAGE = os.getenv("WORKING_PAGE")
 
@@ -17,5 +13,3 @@ LOGIN = os.getenv("LOGIN")
 PASSWORD = os.getenv("PASSWORD")
 
 CLICK_DELAY = float(os.getenv("CLICK_DELAY"))
-
-CLICK_FREQUENCY_IN_MIN = int(os.getenv("CLICK_FREQUENCY_IN_MIN"))
