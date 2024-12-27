@@ -34,15 +34,15 @@ jobs:
 
       - name: Run Python Selenium script
         env:
-          SIGNIN_PAGE: ${{ secrets.SIGNIN_PAGE }}
-          WORKING_PAGE: ${{ secrets.WORKING_PAGE }}
-          OPTIONS_BUTTON_SELECTOR: ${{ secrets.OPTIONS_BUTTON_SELECTOR }}
-          SAVE_BUTTON_SELECTOR: ${{ secrets.SAVE_BUTTON_SELECTOR }}
-          LOGIN_FIELD_SELECTOR: ${{ secrets.LOGIN_FIELD_SELECTOR }}
-          PASSWORD_FIELD_SELECTOR: ${{ secrets.PASSWORD_FIELD_SELECTOR }}
+#          SIGNIN_PAGE: ${{ secrets.SIGNIN_PAGE }}
+#          WORKING_PAGE: ${{ secrets.WORKING_PAGE }}
+#          OPTIONS_BUTTON_SELECTOR: ${{ secrets.OPTIONS_BUTTON_SELECTOR }}
+#          SAVE_BUTTON_SELECTOR: ${{ secrets.SAVE_BUTTON_SELECTOR }}
+#          LOGIN_FIELD_SELECTOR: ${{ secrets.LOGIN_FIELD_SELECTOR }}
+#          PASSWORD_FIELD_SELECTOR: ${{ secrets.PASSWORD_FIELD_SELECTOR }}
           LOGIN: ${{ secrets.LOGIN }}
           PASSWORD: ${{ secrets.PASSWORD }}
-          CLICK_DELAY: ${{ secrets.CLICK_DELAY }}
+#          CLICK_DELAY: ${{ secrets.CLICK_DELAY }}
         run: |
           python main.py
 
