@@ -45,21 +45,20 @@ def sign_in(driver: WebDriver) -> None:
     url_before_signin = driver.current_url
 
     if not (config.LOGIN_FIELD_SELECTOR and config.PASSWORD_FIELD_SELECTOR):
-        raise NoSignInFieldsError
+        raise NoSignInFieldsError("Credential fields haven't been found")
 
     login_field = driver.find_element(By.ID, config.LOGIN_FIELD_SELECTOR)
     password_field = driver.find_element(By.ID, config.PASSWORD_FIELD_SELECTOR)
 
     if not (config.LOGIN and config.PASSWORD):
-        raise NoSignInCredentialsError
+        raise NoSignInCredentialsError("No sign in credentials")
 
     login_field.send_keys(config.LOGIN)
     password_field.send_keys(config.PASSWORD)
     password_field.send_keys(Keys.RETURN)
 
     if url_before_signin == driver.current_url:
-        logger.exception("Unsuccessful attempt to sign in!")
-        raise SignInError
+        raise SignInError("Unsuccessful attempt to sign in!")
 
     logger.info("Signed in successfully")
     time.sleep(1)
