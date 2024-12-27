@@ -12,15 +12,10 @@ def main():
     logger.info("App started successfully")
     driver = get_webdriver()
     try:
-        logger.info(config.SIGNIN_PAGE)
         load_page(driver, config.SIGNIN_PAGE)
-        logging.info(f"Page '{driver.current_url}' loaded")
         sign_in(driver)
-        logging.info(f"Page '{driver.current_url}' loaded")
         load_page(driver, config.WORKING_PAGE)
-        logging.info(f"Page '{driver.current_url}' loaded")
         save_plays(driver)
-        logging.info(f"Page '{driver.current_url}' loaded")
     except Exception as e:
         logger.error("An error occurred: %s", e)
     finally:

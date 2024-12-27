@@ -1,0 +1,2 @@
+class SignInError(Exception):
+    pass
