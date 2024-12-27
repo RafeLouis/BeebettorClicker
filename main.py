@@ -14,6 +14,7 @@ def main():
     try:
         logger.info(config.SIGNIN_PAGE)
         load_page(driver, config.SIGNIN_PAGE)
+        logging.info(f"Page '{driver.current_url}' loaded")
         sign_in(driver)
         load_page(driver, config.WORKING_PAGE)
         save_plays(driver)
