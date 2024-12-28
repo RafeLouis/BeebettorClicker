@@ -2,14 +2,8 @@ name: Run Selenium Script Every 15 Minutes
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/16 * * * *'
   workflow_dispatch:
-    inputs:
-      send_tg_message:
-        description: 'Enable sending Telegram notifications (yes/no)'
-        required: false
-        default: 'yes'
-        type: string
 
 jobs:
   selenium-job:
@@ -46,20 +40,3 @@ jobs:
           PASSWORD: ${{ secrets.PASSWORD }}
         run: |
           python main.py
-
-  send_message:
-    runs-on: ubuntu-latest
-    needs: selenium-job
-    steps:
-      - name: Check Deployment Status
-        id: check_status
-        run: echo "Check service status or deployment logs here"
-        continue-on-error: true
-
-      - name: Conditionally Send Telegram Message
-        if: ${{ steps.check_status.outcome == 'success' && github.event.inputs.send_tg_message == 'yes' }}
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: "Plays saved successfully"
