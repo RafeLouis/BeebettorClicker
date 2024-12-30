@@ -8,6 +8,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import WebDriverException
 
 import config
 from exceptions import SignInError, NoSignInCredentialsError, NoSignInFieldsError
@@ -31,12 +32,15 @@ def save_plays(driver: WebDriver) -> None:
     logger.info("%s plays founded", len(elements or ''))
 
     for option_element in elements:
-        click_element(driver, option_element, config.CLICK_DELAY)
+        try:
+            click_element(driver, option_element, config.CLICK_DELAY)
 
-        parent_element = option_element.find_element(By.XPATH, "./parent::div/parent::div")
-        save_element = parent_element.find_element(By.CSS_SELECTOR, config.SAVE_BUTTON_SELECTOR)
-        click_element(driver, save_element, config.CLICK_DELAY)
-        counter += 1
+            parent_element = option_element.find_element(By.XPATH, "./parent::div/parent::div")
+            save_element = parent_element.find_element(By.CSS_SELECTOR, config.SAVE_BUTTON_SELECTOR)
+            click_element(driver, save_element, config.CLICK_DELAY)
+            counter += 1
+        except WebDriverException as e:
+            logger.exception("WebDriverException message: %s", e)
 
     logger.info("%s plays saved", counter)
 
