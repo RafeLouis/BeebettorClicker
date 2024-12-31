@@ -12,3 +12,11 @@ class NoSignInFieldsError(Exception):
 
 class URLNotPassedError(Exception):
     pass
+
+
+class HTMLElementNotFoundError(Exception):
+    pass
+
+
+class FormNotFilledError(Exception):
+    pass

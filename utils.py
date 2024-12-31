@@ -11,8 +11,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException
 
 import config
-from exceptions import SignInError, NoSignInCredentialsError, NoSignInFieldsError
-
+from exceptions import SignInError, NoSignInCredentialsError, NoSignInFieldsError, HTMLElementNotFoundError, \
+    FormNotFilledError
 
 logging.basicConfig(level=logging.INFO)
 
@@ -51,15 +51,21 @@ def sign_in(driver: WebDriver) -> None:
     if not (config.LOGIN_FIELD_SELECTOR and config.PASSWORD_FIELD_SELECTOR):
         raise NoSignInFieldsError("Credential fields haven't been found")
 
-    login_field = driver.find_element(By.ID, config.LOGIN_FIELD_SELECTOR)
-    password_field = driver.find_element(By.ID, config.PASSWORD_FIELD_SELECTOR)
+    try:
+        login_field = driver.find_element(By.ID, config.LOGIN_FIELD_SELECTOR)
+        password_field = driver.find_element(By.ID, config.PASSWORD_FIELD_SELECTOR)
+    except WebDriverException as e:
+        raise HTMLElementNotFoundError("HTML Element not found: %s", e)
 
     if not (config.LOGIN and config.PASSWORD):
         raise NoSignInCredentialsError("No sign in credentials")
 
-    login_field.send_keys(config.LOGIN)
-    password_field.send_keys(config.PASSWORD)
-    password_field.send_keys(Keys.RETURN)
+    try:
+        login_field.send_keys(config.LOGIN)
+        password_field.send_keys(config.PASSWORD)
+        password_field.send_keys(Keys.RETURN)
+    except WebDriverException as e:
+        raise FormNotFilledError("Form not filled: %s", e)
 
     if url_before_signin == driver.current_url:
         raise SignInError("Unsuccessful attempt to sign in!")
