@@ -54,7 +54,7 @@ def sign_in(driver: WebDriver) -> None:
     try:
         login_field = driver.find_element(By.ID, config.LOGIN_FIELD_SELECTOR)
         password_field = driver.find_element(By.ID, config.PASSWORD_FIELD_SELECTOR)
-    except WebDriverException as e:
+    except Exception as e:
         raise HTMLElementNotFoundError("HTML Element not found: %s", e)
 
     if not (config.LOGIN and config.PASSWORD):
@@ -64,7 +64,7 @@ def sign_in(driver: WebDriver) -> None:
         login_field.send_keys(config.LOGIN)
         password_field.send_keys(config.PASSWORD)
         password_field.send_keys(Keys.RETURN)
-    except WebDriverException as e:
+    except Exception as e:
         raise FormNotFilledError("Form not filled: %s", e)
 
     if url_before_signin == driver.current_url:
