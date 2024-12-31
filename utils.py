@@ -46,12 +46,12 @@ def save_plays(driver: WebDriver) -> None:
 
 
 def sign_in(driver: WebDriver) -> None:
-    url_before_signin = driver.current_url
 
     if not (config.LOGIN_FIELD_SELECTOR and config.PASSWORD_FIELD_SELECTOR):
         raise NoSignInFieldsError("Credential fields haven't been found")
 
     try:
+        url_before_signin = driver.current_url
         login_field = driver.find_element(By.ID, config.LOGIN_FIELD_SELECTOR)
         password_field = driver.find_element(By.ID, config.PASSWORD_FIELD_SELECTOR)
     except Exception as e:
