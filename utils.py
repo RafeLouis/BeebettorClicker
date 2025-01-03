@@ -28,9 +28,21 @@ def load_page_and_run_func(driver: WebDriver, page_url: str, func: Callable) -> 
 
 
 def click_element(driver: WebDriver, element: WebElement, delay: float = 1.0) -> None:
-    ActionChains(driver).move_to_element(element).click().perform()
-    time.sleep(delay)
-    logger.debug("Element %s was clicked", element)
+    try:
+        if not element.is_displayed():
+            driver.execute_script("arguments[0].scrollIntoView(true);", element)
+
+        try:
+            ActionChains(driver).move_to_element(element).click().perform()
+        except Exception as e:
+            logger.warning("ActionChains failed, falling back to JavaScript: %s", e)
+            driver.execute_script("arguments[0].click();", element)
+
+        time.sleep(delay)
+        logger.debug("Element %s was clicked", element)
+
+    except Exception as e:
+        logger.exception("Failed to click element: %s", e)
 
 
 def save_plays(driver: WebDriver) -> None:
