@@ -45,51 +45,48 @@ def click_element(driver: WebDriver, element: WebElement, delay: float = 1.0) ->
         logger.exception("Failed to click element: %s", e)
 
 
-def save_plays(driver: WebDriver) -> None:
-    unique_card_ids = set()
-    counter = 0
-
+def save_games(driver: WebDriver) -> None:
     cards = driver.find_elements(By.CSS_SELECTOR, f"[id*='{config.CARD_SELECTOR}']")
-    logger.info("Plays founded - %s", len(cards or ''))
+
+    founded_games_amount = len(cards or "")
+    saved_games_counter = skipped_games_counter = 0
+    unique_card_ids = set()
+
+    logger.info("Games founded: %s", founded_games_amount)
 
     for card in cards:
-        is_duplicate_badge = card.find_elements(By.XPATH, f".//p[text()='{config.DUPLICATE_TEXT_ALERT}']")
 
         try:
+            is_duplicate_badge = card.find_elements(By.XPATH, f".//p[text()='{config.DUPLICATE_TEXT_ALERT}']")
             card_id_element = card.find_element(By.CSS_SELECTOR, config.CARD_ID_SELECTOR)
             card_id = card_id_element.get_attribute(config.CARD_ID_ATTR)
-            logger.info("Current Cart ID: %s", card_id)
-
-            if is_duplicate_badge:
-                logger.info("Card ID: %s skipped because of duplicate badge", card_id)
-                continue
+            logger.info("Current Game ID: %s", card_id)
 
             if card_id is None:
-                logger.warning("Unable to find Card ID for card")
+                logger.warning("Unable to find Game ID for card")
+                skipped_games_counter += 1
+                continue
+
+            if is_duplicate_badge:
+                logger.info("Game ID: %s skipped because of duplicate badge", card_id)
+                skipped_games_counter += 1
                 continue
 
             if card_id in unique_card_ids:
-                logger.info("Card ID: %s skipped because of duplicate", card_id)
+                logger.info("Game ID: %s skipped because of duplicate", card_id)
+                skipped_games_counter += 1
                 continue
 
             unique_card_ids.add(card_id)
 
-            logger.info("Duplicates not found for GameID: %s", card_id)
+            logger.info("Duplicates not found for Game ID: %s", card_id)
 
             option_element = card.find_element(By.CSS_SELECTOR, config.OPTIONS_BUTTON_SELECTOR)
-
-            logger.info("Option element found: %s", option_element)
-            logger.info("Element attributes: %s", option_element.get_attribute("outerHTML"))
-            logger.info("Element size: %s", option_element.size)
-            logger.info("Element location: %s", option_element.location)
-
+            logger.debug("Option element found: %s", option_element)
             click_element(driver, option_element, config.CLICK_DELAY)
 
             save_element = card.find_element(By.CSS_SELECTOR, config.SAVE_BUTTON_SELECTOR)
-            logger.info("Save element found: %s", save_element)
-            logger.info("Element attributes: %s", save_element.get_attribute("outerHTML"))
-            logger.info("Element size: %s", save_element.size)
-            logger.info("Element location: %s", save_element.location)
+            logger.debug("Save element found: %s", save_element)
             click_element(driver, save_element, config.CLICK_DELAY)
 
         except NoSuchElementException as e:
@@ -97,9 +94,10 @@ def save_plays(driver: WebDriver) -> None:
         except WebDriverException as e:
             logger.exception("WebDriverException message: %s", e)
         else:
-            counter += 1
+            saved_games_counter += 1
 
-    logger.info("Plays saved - %s", counter)
+    logger.info("Games handled: %s (saved: %s, skipped: %s)",
+                founded_games_amount, saved_games_counter, skipped_games_counter)
 
 
 def sign_in(driver: WebDriver) -> None:

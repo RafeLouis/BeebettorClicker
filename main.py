@@ -1,7 +1,7 @@
 import logging
 
 import config
-from utils import get_chrome_webdriver, sign_in, save_plays, load_page_and_run_func
+from utils import get_chrome_webdriver, sign_in, save_games, load_page_and_run_func
 
 logging.basicConfig(level=logging.INFO)
 
@@ -13,7 +13,7 @@ def main() -> None:
     driver = get_chrome_webdriver()
     try:
         load_page_and_run_func(driver=driver, page_url=config.SIGNIN_PAGE, func=sign_in)
-        load_page_and_run_func(driver=driver, page_url=config.WORKING_PAGE, func=save_plays)
+        load_page_and_run_func(driver=driver, page_url=config.WORKING_PAGE, func=save_games)
     except Exception as e:
         logger.error("An error occurred: %s", e)
     else:
