@@ -50,7 +50,7 @@ def save_plays(driver: WebDriver) -> None:
     counter = 0
 
     cards = driver.find_elements(By.CSS_SELECTOR, f"[id*='{config.CARD_SELECTOR}']")
-    logger.info("Play founded - %s", len(cards or ''))
+    logger.info("Plays founded - %s", len(cards or ''))
 
     for card in cards:
         is_duplicate_badge = card.find_elements(By.XPATH, f".//p[text()='{config.DUPLICATE_TEXT_ALERT}']")
@@ -74,17 +74,22 @@ def save_plays(driver: WebDriver) -> None:
 
             unique_card_ids.add(card_id)
 
-            logger.info("Duplicates not found for")
+            logger.info("Duplicates not found for GameID: %s", card_id)
 
             option_element = card.find_element(By.CSS_SELECTOR, config.OPTIONS_BUTTON_SELECTOR)
-            logger.info("Option element found")
+
+            logger.info("Option element found: %s", option_element.text)
             logger.info("Element attributes: %s", option_element.get_attribute("outerHTML"))
             logger.info("Element size: %s", option_element.size)
             logger.info("Element location: %s", option_element.location)
+
             click_element(driver, option_element, config.CLICK_DELAY)
 
             save_element = card.find_element(By.CSS_SELECTOR, config.SAVE_BUTTON_SELECTOR)
-            logger.info("Save element found")
+            logger.info("Save element found: %s", save_element.text)
+            logger.info("Element attributes: %s", save_element.get_attribute("outerHTML"))
+            logger.info("Element size: %s", save_element.size)
+            logger.info("Element location: %s", save_element.location)
             click_element(driver, save_element, config.CLICK_DELAY)
 
             counter += 1
