@@ -78,7 +78,7 @@ def save_plays(driver: WebDriver) -> None:
 
             option_element = card.find_element(By.CSS_SELECTOR, config.OPTIONS_BUTTON_SELECTOR)
 
-            logger.info("Option element found: %s", option_element.text)
+            logger.info("Option element found: %s", option_element)
             logger.info("Element attributes: %s", option_element.get_attribute("outerHTML"))
             logger.info("Element size: %s", option_element.size)
             logger.info("Element location: %s", option_element.location)
@@ -86,18 +86,18 @@ def save_plays(driver: WebDriver) -> None:
             click_element(driver, option_element, config.CLICK_DELAY)
 
             save_element = card.find_element(By.CSS_SELECTOR, config.SAVE_BUTTON_SELECTOR)
-            logger.info("Save element found: %s", save_element.text)
+            logger.info("Save element found: %s", save_element)
             logger.info("Element attributes: %s", save_element.get_attribute("outerHTML"))
             logger.info("Element size: %s", save_element.size)
             logger.info("Element location: %s", save_element.location)
             click_element(driver, save_element, config.CLICK_DELAY)
 
-            counter += 1
-
         except NoSuchElementException as e:
             logger.exception("Unable to find element in card: %s\n%s", card, e)
         except WebDriverException as e:
             logger.exception("WebDriverException message: %s", e)
+        else:
+            counter += 1
 
     logger.info("Plays saved - %s", counter)
 
