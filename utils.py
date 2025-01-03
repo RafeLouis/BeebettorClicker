@@ -46,7 +46,7 @@ def save_plays(driver: WebDriver) -> None:
             card_id = card.find_element(By.CSS_SELECTOR, config.CARD_ID_SELECTOR).get_attribute(config.CARD_ID_ATTR)
 
             if is_duplicate_badge:
-                logger.debug("Card ID: %s skipped because of duplicate badge", card_id)
+                logger.info("Card ID: %s skipped because of duplicate badge", card_id)
                 continue
 
             if card_id is None:
@@ -54,7 +54,7 @@ def save_plays(driver: WebDriver) -> None:
                 continue
 
             if card_id in unique_card_ids:
-                logger.debug("Card ID: %s skipped because of duplicate", card_id)
+                logger.info("Card ID: %s skipped because of duplicate", card_id)
                 continue
 
             unique_card_ids.add(card_id)
