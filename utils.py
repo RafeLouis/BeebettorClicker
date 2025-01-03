@@ -41,12 +41,11 @@ def save_plays(driver: WebDriver) -> None:
     logger.info("Play founded - %s", len(cards or ''))
 
     for card in cards:
+        is_duplicate_badge = card.find_elements(By.XPATH, f"//p[text()='{config.DUPLICATE_TEXT_ALERT}']")
+
         try:
-            is_duplicate_badge = card.find_elements(By.XPATH, f"//p[text()='{config.DUPLICATE_TEXT_ALERT}']")
             card_id_element = card.find_element(By.CSS_SELECTOR, config.CARD_ID_SELECTOR)
-            logger.info(str(card_id_element))
             card_id = card_id_element.get_attribute(config.CARD_ID_ATTR)
-            logger.info(card_id)
 
             if is_duplicate_badge:
                 logger.info("Card ID: %s skipped because of duplicate badge", card_id)
