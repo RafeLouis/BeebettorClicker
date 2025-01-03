@@ -74,10 +74,13 @@ def save_plays(driver: WebDriver) -> None:
 
             unique_card_ids.add(card_id)
 
-            logger.info("Duplicates not found")
+            logger.info("Duplicates not found for")
 
             option_element = card.find_element(By.CSS_SELECTOR, config.OPTIONS_BUTTON_SELECTOR)
             logger.info("Option element found")
+            logger.info("Element attributes: %s", option_element.get_attribute("outerHTML"))
+            logger.info("Element size: %s", option_element.size)
+            logger.info("Element location: %s", option_element.location)
             click_element(driver, option_element, config.CLICK_DELAY)
 
             save_element = card.find_element(By.CSS_SELECTOR, config.SAVE_BUTTON_SELECTOR)
