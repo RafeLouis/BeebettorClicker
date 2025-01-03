@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import WebDriverException, NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException
 
 import config
 from exceptions import SignInError, NoSignInCredentialsError, NoSignInFieldsError, HTMLElementNotFoundError, \
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 def load_page_and_run_func(driver: WebDriver, page_url: str, func: Callable) -> None:
-    if not page_url or page_url == '':
+    if not page_url:
         raise URLNotPassedError(f"Page url for {func.__name__} function not provided")
     load_page(driver, page_url)
     func(driver)
@@ -45,59 +45,69 @@ def click_element(driver: WebDriver, element: WebElement, delay: float = 1.0) ->
         logger.exception("Failed to click element: %s", e)
 
 
+def check_duplicates(game_element: WebElement, unique_ids: set[str]) -> bool:
+    is_duplicate_badge = game_element.find_elements(By.XPATH, f".//p[text()='{config.DUPLICATE_TEXT_ALERT}']")
+
+    try:
+        game_id = game_element.find_element(By.CSS_SELECTOR, config.CARD_ID_SELECTOR).get_attribute(config.CARD_ID_ATTR)
+    except NoSuchElementException as e:
+        logger.warning("Unable to find element in game card: %s\n%s", game_element, e)
+        return True
+
+    logger.info("Game ID: %s", game_id)
+
+    if not game_id:
+        logger.warning("Unable to find Game ID for game card")
+        return True
+
+    if is_duplicate_badge:
+        logger.debug("Game ID: %s skipped because of a duplicate badge", game_id)
+        return True
+
+    if game_id in unique_ids:
+        logger.debug("Game ID: %s skipped because of duplicate", game_id)
+        return True
+
+    unique_ids.add(game_id)
+    logger.debug("Duplicates not found for Game ID: %s", game_id)
+    return False
+
+
+def find_and_click_on_element(driver: WebDriver, selector: str, area: WebElement | None = None) -> None:
+    if area:
+        element = area.find_element(By.CSS_SELECTOR, selector)
+    else:
+        element = driver.find_element(By.CSS_SELECTOR, selector)
+    logger.debug("Element found: %s", element)
+
+    click_element(driver, element, config.CLICK_DELAY)
+
+
 def save_games(driver: WebDriver) -> None:
-    cards = driver.find_elements(By.CSS_SELECTOR, f"[id*='{config.CARD_SELECTOR}']")
+    game_elements = driver.find_elements(By.CSS_SELECTOR, f"[id*='{config.CARD_SELECTOR}']")
+    games_amount = len(game_elements or "")
+    logger.info("Games found: %s", games_amount)
 
-    founded_games_amount = len(cards or "")
     saved_games_counter = skipped_games_counter = 0
-    unique_card_ids = set()
+    unique_game_ids: set[str] = set()
 
-    logger.info("Games founded: %s", founded_games_amount)
-
-    for card in cards:
+    for game_element in game_elements:
+        if check_duplicates(game_element, unique_game_ids):
+            logger.info("Game skipped")
+            skipped_games_counter += 1
+            continue
 
         try:
-            is_duplicate_badge = card.find_elements(By.XPATH, f".//p[text()='{config.DUPLICATE_TEXT_ALERT}']")
-            card_id_element = card.find_element(By.CSS_SELECTOR, config.CARD_ID_SELECTOR)
-            card_id = card_id_element.get_attribute(config.CARD_ID_ATTR)
-            logger.info("Current Game ID: %s", card_id)
-
-            if card_id is None:
-                logger.warning("Unable to find Game ID for card")
-                skipped_games_counter += 1
-                continue
-
-            if is_duplicate_badge:
-                logger.info("Game ID: %s skipped because of duplicate badge", card_id)
-                skipped_games_counter += 1
-                continue
-
-            if card_id in unique_card_ids:
-                logger.info("Game ID: %s skipped because of duplicate", card_id)
-                skipped_games_counter += 1
-                continue
-
-            unique_card_ids.add(card_id)
-
-            logger.info("Duplicates not found for Game ID: %s", card_id)
-
-            option_element = card.find_element(By.CSS_SELECTOR, config.OPTIONS_BUTTON_SELECTOR)
-            logger.debug("Option element found: %s", option_element)
-            click_element(driver, option_element, config.CLICK_DELAY)
-
-            save_element = card.find_element(By.CSS_SELECTOR, config.SAVE_BUTTON_SELECTOR)
-            logger.debug("Save element found: %s", save_element)
-            click_element(driver, save_element, config.CLICK_DELAY)
-
+            find_and_click_on_element(driver=driver, selector=config.OPTIONS_BUTTON_SELECTOR, area=game_element)
+            find_and_click_on_element(driver=driver, selector=config.SAVE_BUTTON_SELECTOR, area=game_element)
         except NoSuchElementException as e:
-            logger.exception("Unable to find element in card: %s\n%s", card, e)
-        except WebDriverException as e:
-            logger.exception("WebDriverException message: %s", e)
+            logger.exception("Unable to find element in game card: %s\n%s", game_element, e)
         else:
             saved_games_counter += 1
+            logger.info("Game saved")
 
     logger.info("Games handled: %s (saved: %s, skipped: %s)",
-                founded_games_amount, saved_games_counter, skipped_games_counter)
+                games_amount, saved_games_counter, skipped_games_counter)
 
 
 def sign_in(driver: WebDriver) -> None:

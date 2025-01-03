@@ -4,9 +4,9 @@ SIGNIN_PAGE = os.getenv("SIGNIN_PAGE", '')
 WORKING_PAGE = os.getenv("WORKING_PAGE", '')
 
 CARD_SELECTOR = os.getenv("CARD_SELECTOR", "swiper-container")
-OPTIONS_BUTTON_SELECTOR = os.getenv("OPTIONS_BUTTON_SELECTOR")
-SAVE_BUTTON_SELECTOR = os.getenv("SAVE_BUTTON_SELECTOR")
-DUPLICATE_TEXT_ALERT = os.getenv("DUPLICATE_TEXT_ALERT", "Similar bet already placed")
+OPTIONS_BUTTON_SELECTOR = os.getenv("OPTIONS_BUTTON_SELECTOR", "")
+SAVE_BUTTON_SELECTOR = os.getenv("SAVE_BUTTON_SELECTOR", "")
+DUPLICATE_TEXT_ALERT = os.getenv("DUPLICATE_TEXT_ALERT", "")
 CARD_ID_SELECTOR = os.getenv("CARD_ID_SELECTOR", "div[data-evresult-target='gid']")
 CARD_ID_ATTR = os.getenv("CARD_ID_ATTRIBUTE", 'data-metrics')
 
