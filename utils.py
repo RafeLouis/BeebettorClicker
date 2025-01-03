@@ -46,6 +46,7 @@ def save_plays(driver: WebDriver) -> None:
         try:
             card_id_element = card.find_element(By.CSS_SELECTOR, config.CARD_ID_SELECTOR)
             card_id = card_id_element.get_attribute(config.CARD_ID_ATTR)
+            logger.info("Current Cart ID: %s", card_id)
 
             if is_duplicate_badge:
                 logger.info("Card ID: %s skipped because of duplicate badge", card_id)
@@ -61,10 +62,14 @@ def save_plays(driver: WebDriver) -> None:
 
             unique_card_ids.add(card_id)
 
+            logger.info("Duplicates not found")
+
             option_element = card.find_element(By.CSS_SELECTOR, config.OPTIONS_BUTTON_SELECTOR)
+            logger.info("Option element found")
             click_element(driver, option_element, config.CLICK_DELAY)
 
             save_element = card.find_element(By.CSS_SELECTOR, config.SAVE_BUTTON_SELECTOR)
+            logger.info("Save element found")
             click_element(driver, save_element, config.CLICK_DELAY)
 
             counter += 1
