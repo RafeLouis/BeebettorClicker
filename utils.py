@@ -42,7 +42,7 @@ def save_plays(driver: WebDriver) -> None:
 
     for card in cards:
         try:
-            is_duplicate_badge = card.find_elements(By.XPATH, f"//p[text()='{config.DUPLICATE_TEXT_ALERT}]")
+            is_duplicate_badge = card.find_elements(By.XPATH, f"//p[text()='{config.DUPLICATE_TEXT_ALERT}']")
             card_id = card.find_element(By.CSS_SELECTOR, config.CARD_ID_SELECTOR).get_attribute(config.CARD_ID_ATTR)
 
             if is_duplicate_badge:
